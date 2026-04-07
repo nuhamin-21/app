@@ -1,22 +1,40 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function FocusTime({ focusTask, onBack }) {
     const [isRunning , setIsRunning ] = useState(false);
-    const times = [600, 900, 1200]; // 10, 15, 20 minutes in seconds
-    const [selectedTime, setSelectedTime] = useState(null);
+    const times = [10, 900, 1200];
+    const [selectedTime, setSelectedTime] = useState();
     const timeFormat = (times) => {
         const minutes = Math.floor(times / 60);
         const seconds = Math.floor(times % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
+    useEffect(()=>{
+            let intervalId;
+
+             intervalId = setInterval(()=>{
+                 setSelectedTime(prev => prev -1)
+            },1000)
+        
+         if(!isRunning || selectedTime <= 0) {
+            clearInterval(intervalId);
+         }
+         else if(selectedTime === 0){
+            Alert.alert(
+                `You have  focused on ....`
+            )
+         }
+  return () => clearInterval(intervalId);
+  },[isRunning, selectedTime])
+
 
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.timerText}>
-                {timeFormat ? timeFormat(times[0]) : "00:00"}
+                {selectedTime ? timeFormat(selectedTime) : "10:00"}
             </Text>
             <Text style={styles.subTitle}> Focusing on : </Text>
             <Text style={styles.focusTask}>{focusTask}</Text>
@@ -29,8 +47,9 @@ export default function FocusTime({ focusTask, onBack }) {
                     </TouchableOpacity>
                 ))}
             </View>
-            <TouchableOpacity style={styles.startFab} onPress={() => {}}>
-                <Text style={{color: 'white'}}>{isRunning ? "Pause" : "Start"}</Text>
+            <TouchableOpacity style={styles.startFab} onPress={() => {setIsRunning(!isRunning)}}>
+                <Text style={{color: 'white'}}>{isRunning ? 'Stop' : 'Start'}
+                </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backButton} onPress={onBack}>
