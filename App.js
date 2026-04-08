@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from "react-native-paper";
 import { useState, useEffect} from "react";
@@ -21,6 +21,7 @@ export default function App({}) {
         setTasks( prev =>[...prev, trimmed]);
         setTask("");
         setSelectedTask(trimmed);
+        console.log(`You entered ${trimmed}`)
         setSwitchScreen(true);
       }
   }
@@ -52,13 +53,15 @@ export default function App({}) {
      </View>
      <View style={styles.focusedTasks}>
       <Text style={styles.focusTitle}> Things we've focused on: </Text>
-      {tasks.map((task, index) => (
-        <Text key={index} style={styles.taskText}>{task}</Text>
+      <ImageBackground style={styles.taskBackground} source={require('./assets/lofi-bg.jpg')} resizeMode='cover'>
+      <ScrollView style={{padding: 20}} contentContainerStyle={{gap: 10}}>
+      {tasks.map((text, index) => (
+        <Pressable key={index} onPress={() => {changeScreen(); setSelectedTask(text);}} >
+          <Text key={index} style={styles.taskText}>- {text}</Text>
+        </Pressable>
       ))}
-     <View style={{padding: 20}}>
-      <Text style={{ fontSize: 18 , color: 'white', fontWeight: 'semi-bold'}}> 1, Learn react native </Text>
-      <Text style={{ fontSize: 18 , color: 'white', fontWeight: 'semi-bold'}}> 2, Learn js basics </Text>
-     </View>
+      </ScrollView>
+      </ImageBackground>
      </View>
     </SafeAreaView>
   )
@@ -93,7 +96,8 @@ const styles = StyleSheet.create({
   },
   focusedTasks: {
     marginTop: 10,
-    padding: 20,
+    padding: 10,
+    flex: 1,
   },
   focusTitle: {
     fontWeight: 'bold',
@@ -106,5 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     padding: 10,
+  },
+  taskBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+    overflow: 'hidden',
+    borderRadius: 20,
+    marginTop: 20,
   }
 })

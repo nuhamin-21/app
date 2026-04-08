@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { SystemBars} from "react-native-edge-to-edge";
+import { SystemBars } from "react-native-edge-to-edge";
+import Ionicons from '@expo/vector-icons/Ionicons';
 export default function FocusTime({ focusTask, onBack }) {
     const [isRunning , setIsRunning ] = useState(false);
     const times = [10, 900, 1200];
@@ -46,6 +47,11 @@ export default function FocusTime({ focusTask, onBack }) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <ImageBackground style={styles.imageBackground} source={require('../assets/dreamy-cozy.jpg')} resizeMode='cover' >
+            <TouchableOpacity style={styles.backButton} onPress={onBack}>
+                <Ionicons name="chevron-back" size={24} color="white" />
+                <Text style={{color: 'white'}}>Back</Text>
+            </TouchableOpacity>
                 <SystemBars style="light" />
             <Text style={styles.timerText}>
                 {selectedTime ? timeFormat(selectedTime) : "10:00"}
@@ -65,11 +71,8 @@ export default function FocusTime({ focusTask, onBack }) {
                 <Text style={{color: 'white'}}>{isRunning ? 'Stop' : 'Start'}
                 </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                <Text style={{color: 'white'}}>Back</Text>
-            </TouchableOpacity>
             <Toast/>
+              </ImageBackground>
 
         </SafeAreaView>
 
@@ -80,7 +83,11 @@ export default function FocusTime({ focusTask, onBack }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'hsla(245, 94%, 21%, 0.76)S',
+        backgroundColor: '#252250',
+        alignItems: 'center',
+    },
+    imageBackground: {
+        flex: 1,
         alignItems: 'center',
     },
     timerText: {
@@ -133,15 +140,14 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     backButton: {
-        marginTop: 50,
+        flexDirection: 'row',
         height:50,
         width: 100,
         borderRadius: 25,
         backgroundColor: 'transparent',
-        borderWidth: 2,
-        borderColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'flex-start',
 
     },
 })
